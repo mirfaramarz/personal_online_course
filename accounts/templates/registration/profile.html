@@ -1,79 +1,190 @@
 {% extends 'base/_base.html' %}
+{% load static %}
 {% block title %}Profile{% endblock %}
 
 {% block content %}
+<header class="py-8 py-md-11" style="background-image: none;">
+    <div class="container text-center py-xl-2">
+        <h1 class="display-4 fw-semi-bold mb-0">Profile Update</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb breadcrumb-scroll justify-content-center">
+                <li class="breadcrumb-item">
+                    <a class="text-gray-800" href="{% url 'base' %}">Home</a>
+                </li>
+                <li class="breadcrumb-item text-gray-800 active" aria-current="page">
+                    Profile Update
+                </li>
+            </ol>
+        </nav>
+    </div>
+</header>
 
-
-<!-- PAGE TITLE
-    ================================================== -->
-    <header class="py-8 py-md-11" style="background-image: none;">
-        <div class="container text-center py-xl-2">
-            <h1 class="display-4 fw-semi-bold mb-0">Profile Update</h1>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb breadcrumb-scroll justify-content-center">
-                    <li class="breadcrumb-item">
-                        <a class="text-gray-800" href="#">
-                            Home
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item text-gray-800 active" aria-current="page">
-                        Profile Update
-                    </li>
-                </ol>
-            </nav>
-        </div>
-        <!-- Img -->
-        <img class="d-none img-fluid" src="...html" alt="...">
-    </header>
-
-   
-    <!-- Card -->
-            <div class="card" style="width:80%;margin-left:10%;">
-                {% include 'base/utils/message.html' %}
-                <br>
-              <div class="card-body" >
-
-
-             
-                <form method="post" action="{% url 'base' %}">
-                    {% csrf_token %}
-                    
-                  <div class="row">
-                        <div class="col">
-                            <div class="form-group mb-4">
-                              <label>First Name</label>
-                             <input type="text" class="form-control"  placeholder="Enter First Name" name="first_name" value="{{ user.first_name}}">
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="form-group mb-4">
-                              <label>Last Name</label>
-                              <input type="text" class="form-control" placeholder="Enter Last Name" name="last_name" value="{{ user.last_name}}">
-                            </div>
-                        </div>
-                        <div class="w-100"></div>
-                        <div class="col">
-                             <div class="form-group mb-4">
-                                <label>Email address</label>
-                                <input type="email" class="form-control" placeholder="Enter Email" name="email" value="{{ user.email}}" readonly>
-                             </div>
-                        </div>
-                        <div class="col">
-                            <div class="form-group mb-4">
-                               <label>Username</label>
-                               <input type="text" class="form-control" placeholder="Enter Username" name="username" value="{{user.username}}" readonly>
-                            </div>
-                        </div>
-                      <div class="col-12">
-                            <div class="form-group mb-4">
-                               <label>Password</label>
-                               <input type="password" class="form-control" placeholder="Fill Only If You Want To Change Password" name="password">
-                            </div>
-                        </div>
-                  </div>
-                  <button type="submit" class="btn btn-primary">Update Profile </button>
-                </form>
-
-              </div>
+<div class="container bootstrap snippet">
+    <div class="row">
+        <div class="col-sm-10"><h1>{{ user.first_name }}</h1></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3">
+            <!-- Left Sidebar with Avatar Upload and Activity List -->
+            <div class="text-center position-relative">
+                <div class="avatar-container">
+                    <img src="{% static 'assets/img/avatars/avatar-1.jpg' %}" class="avatar img-circle img-thumbnail" alt="avatar">
+                    <div class="edit-overlay">
+                        <span>Edit Photo</span>
+                        <input type="file" class="file-upload" style="display: none;">
+                    </div>
+                </div>
             </div>
+            <hr>
+            
+            <!-- Sidebar Navigation to Tabs -->
+            <ul class="list-group">
+                <li class="list-group-item text-muted">
+                    <a href="#profile" class="tab-link" data-bs-toggle="tab"><strong>Profile</strong></a>
+                </li>
+                <li class="list-group-item">
+                    <a href="#activity" class="tab-link" data-bs-toggle="tab"><strong>Activity</strong></a>
+                </li>
+                <li class="list-group-item">
+                    <a href="#progress" class="tab-link" data-bs-toggle="tab"><strong>Progress</strong></a>
+                </li>
+                <li class="list-group-item">
+                    <a href="#deadline" class="tab-link" data-bs-toggle="tab"><strong>Deadline</strong></a>
+                </li>
+            </ul> 
+        </div><!--/col-3-->
+
+        <div class="col-sm-9">
+            <!-- Tab Buttons -->
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" id="profile-tab" href="#profile" data-bs-toggle="tab">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="activity-tab" href="#activity" data-bs-toggle="tab">Activity</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="progress-tab" href="#progress" data-bs-toggle="tab">Progress</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="deadline-tab" href="#deadline" data-bs-toggle="tab">Deadline</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <!-- Profile Tab -->
+                <div class="tab-pane fade show active" id="profile">
+                    <br>
+                    <div class="card">
+                        <div class="card-body">
+                            {% include 'base/utils/message.html' %}
+                            <form method="post" action="{% url 'profile_update' %}">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group mb-4">
+                                            <label>First Name</label>
+                                            <input type="text" class="form-control" placeholder="Enter First Name" name="first_name" value="{{ user.first_name }}">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group mb-4">
+                                            <label>Last Name</label>
+                                            <input type="text" class="form-control" placeholder="Enter Last Name" name="last_name" value="{{ user.last_name }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group mb-4">
+                                            <label>Email address</label>
+                                            <input type="email" class="form-control" placeholder="Enter Email" name="email" value="{{ user.email }}" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group mb-4">
+                                            <label>Username</label>
+                                            <input type="text" class="form-control" placeholder="Enter Username" name="username" value="{{ user.username }}" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group mb-4">
+                                            <label>Password</label>
+                                            <input type="password" class="form-control" placeholder="Fill Only If You Want To Change Password" name="password">
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Update Profile</button>
+                            </form>
+                        </div>
+                    </div>
+                </div><!--/tab-pane-->
+
+                <!-- Activity Tab -->
+                <div class="tab-pane fade" id="activity">
+                    <br>
+                    <form class="form" action="##" method="post" id="settingsForm">
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="phone"><h4>Phone</h4></label>
+                                <input type="text" class="form-control" name="phone" placeholder="Enter phone">
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="mobile"><h4>Mobile</h4></label>
+                                <input type="text" class="form-control" name="mobile" placeholder="Enter mobile number">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="location"><h4>Location</h4></label>
+                                <input type="text" class="form-control" name="location" placeholder="Enter location">
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="verify_password"><h4>Verify Password</h4></label>
+                                <input type="password" class="form-control" name="verify_password" placeholder="Verify password">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-lg btn-success mt-3">Save</button>
+                    </form>
+                </div><!--/tab-pane-->
+
+                <!-- Progress Tab -->
+                <div class="tab-pane fade" id="progress">
+                    <br>
+                    <h4>Progress</h4>
+                    <p>Progress details and tracking will go here.</p>
+                </div><!--/tab-pane-->
+
+                <!-- Deadline Tab -->
+                <div class="tab-pane fade" id="deadline">
+                    <br>
+                    <h4>Deadline</h4>
+                    <p>Deadline information and reminders will go here.</p>
+                </div><!--/tab-pane-->
+            </div><!--/tab-content-->
+        </div><!--/col-9-->
+    </div><!--/row-->
+</div>
+
+<script>
+    $(document).ready(function() {
+        // Activate sidebar links on tab change
+        $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+            $('.list-group-item').removeClass('active');
+            $('a[href="' + $(e.target).attr('href') + '"]').parent().addClass('active');
+        });
+
+        // Avatar image preview
+        var readURL = function(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('.avatar').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        $(".file-upload").on('change', function(){
+            readURL(this);
+        });
+    });
+</script>
 {% endblock %}
