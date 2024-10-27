@@ -13,6 +13,7 @@ from django.utils.http import urlsafe_base64_decode
 from django.core.mail import send_mail
 from django.conf import settings
 from .tokens import account_activation_token 
+from .models import UserProfile
 
 
 
@@ -129,22 +130,32 @@ def profile(request):
 
 @login_required
 def profile_update(request):
+    user = request.user
+    profile, created = UserProfile.objects.get_or_create(user=user)
+
     if request.method == 'POST':
         username = request.POST.get('username')
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         email = request.POST.get('email')
         password = request.POST.get('password')
-        user_id = request.user.id
+        profile_picture = request.FILES.get('profile_picture')
 
-        user = User.objects.get(id=user_id)
         user.first_name = first_name
         user.last_name = last_name
         user.username = username
         user.email = email
 
-        if password !=None and password != "":
+        if password:
             user.set_password(password)
+
+        if profile_picture:
+            profile.profile_picture = profile_picture
+
         user.save()
-        messages.success(request, 'Profile has been successfuly updated.')
+        profile.save()  # Save the profile picture
+
+        messages.success(request, 'Profile has been successfully updated.')
         return redirect('profile')
+
+    return render(request, 'registration/profile.html', {'user': user})
