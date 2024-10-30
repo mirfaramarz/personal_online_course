@@ -15,3 +15,11 @@ def about_us(request):
 
 def contact_us(request):
     return render(request, 'base/pages/contact_us.html')
+
+def search(request):
+    query = request.GET['query']
+    course = Course.objects.filter(title__icontains=query)
+    context = {
+        'course':course,
+    }
+    return render(request, 'base/search/search.html', context)
